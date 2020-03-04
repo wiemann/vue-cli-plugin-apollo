@@ -72,8 +72,8 @@ export function createApolloClient ({
     }
 
     // HTTP Auth header injection
-    authLink = setContext((_, { headers }) => {
-      const authorization = getAuth(tokenName)
+    authLink = setContext(async (_, { headers }) => {
+      const authorization = await getAuth(tokenName)
       const authorizationHeader = authorization ? { authorization } : {}
       return {
         headers: {
@@ -114,8 +114,8 @@ export function createApolloClient ({
     if (wsEndpoint) {
       wsClient = new SubscriptionClient(wsEndpoint, {
         reconnect: true,
-        connectionParams: () => {
-          const authorization = getAuth(tokenName)
+        connectionParams: async () => {
+          const authorization = await getAuth(tokenName)
           return authorization ? { authorization, headers: { authorization } } : {}
         },
       })
